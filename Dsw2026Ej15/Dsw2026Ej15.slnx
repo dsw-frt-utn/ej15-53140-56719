@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="Dsw2026Ej15.Data/Dsw2026Ej15.Data.csproj">
+    <BuildDependency Project="Dsw2026Ej15.Domain/Dsw2026Ej15.Domain.csproj" />
+  </Project>
+  <Project Path="Dsw2026Ej15.Domain/Dsw2026Ej15.Domain.csproj" />
+  <Project Path="Dsw2026Ej15/Dsw2026Ej15.Api.csproj">
+    <BuildDependency Project="Dsw2026Ej15.Data/Dsw2026Ej15.Data.csproj" />
+    <BuildDependency Project="Dsw2026Ej15.Domain/Dsw2026Ej15.Domain.csproj" />
+  </Project>
+</Solution>
