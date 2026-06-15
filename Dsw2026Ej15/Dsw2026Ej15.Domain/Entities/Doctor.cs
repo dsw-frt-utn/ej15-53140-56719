@@ -9,5 +9,6 @@ public class Doctor : BaseEntity
     public string? Name { get; set; }
     public string? LicenseNumber { get; set; }
     public bool IsActive { get; set; }
+    public Guid specialityId { get; set; }
     public Speciality? speciality { get; set; }
 }
