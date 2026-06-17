@@ -16,6 +16,7 @@ public class Doctor : BaseEntity
     {
         Name = string.Empty;
         LicenseNumber = string.Empty;
+        Speciality = null;
     }
     public Doctor(string name, string licenseNumber, Speciality speciality, Guid? id = null) : base()
     {

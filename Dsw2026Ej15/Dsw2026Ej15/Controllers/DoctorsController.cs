@@ -44,5 +44,25 @@ public class DoctorsController : ControllerBase
         return StatusCode(201, createdDoctor);
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<DoctorModel.Response>>> GetActiveDoctors()
+    {
+        var doctorsActives = await _persistence.GetActiveDoctorsAsync();
+
+        try
+        {
+            var doctorsDtos = doctorsActives.Select(d => new DoctorModel.Response(
+                Name: d.Name,
+                LicenseNumber: d.LicenseNumber,
+                Speciality: d.Speciality?.Name
+                )).ToList();
+
+            return Ok(doctorsDtos);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Error interno del servidor");
+        }
+    }
 
 }

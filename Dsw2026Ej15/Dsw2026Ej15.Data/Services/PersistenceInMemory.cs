@@ -30,7 +30,12 @@ public class PersistenceInMemory : IPersistence
 
     public async Task<IEnumerable<Doctor>> GetActiveDoctorsAsync()
     {
-        return await Task.FromResult(_doctors.Where(d => d.IsActive).ToList());
+       var activeDoctors = _doctors.Where(d => d.IsActive).ToList();
+        foreach (var doctor in activeDoctors)
+        {
+            doctor.Speciality = _specialities.FirstOrDefault(s => s.Id == doctor.SpecialityId);
+        }
+        return await Task.FromResult(activeDoctors);
     }
 
     public async Task<bool> UpdateDoctorAsync(Doctor doctor)
