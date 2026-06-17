@@ -9,6 +9,20 @@ public class Doctor : BaseEntity
     public string? Name { get; set; }
     public string? LicenseNumber { get; set; }
     public bool IsActive { get; set; }
-    public Guid specialityId { get; set; }
-    public Speciality? speciality { get; set; }
+    public Guid SpecialityId { get; set; }
+    public Speciality? Speciality { get; set; }
+
+    public Doctor()
+    {
+        Name = string.Empty;
+        LicenseNumber = string.Empty;
+    }
+    public Doctor(string name, string licenseNumber, Speciality speciality, Guid? id = null) : base()
+    {
+        Name = name;
+        LicenseNumber = licenseNumber;
+        SpecialityId = speciality.Id;
+        Speciality = speciality;
+        IsActive = true;
+    }
 }

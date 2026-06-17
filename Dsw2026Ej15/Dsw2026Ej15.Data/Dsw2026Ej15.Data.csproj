@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="specialities.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Sources\specialities.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

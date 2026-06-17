@@ -14,7 +14,7 @@ namespace Dsw2026Ej15
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
 
             var app = builder.Build();
@@ -27,9 +27,8 @@ namespace Dsw2026Ej15
             }
 
             app.UseAuthorization();
-
-
             app.MapControllers();
+
 
             app.Run();
         }

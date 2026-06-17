@@ -9,8 +9,8 @@ namespace Dsw2026Ej15.Data.Services;
 
 public class PersistenceInMemory : IPersistence
 {
-    private readonly List<Speciality> _specialities = new();
-    private readonly List<Doctor> _doctors = new();
+    private readonly List<Speciality> _specialities = [];
+    private readonly List<Doctor> _doctors = [];
 
     public PersistenceInMemory()
     {
@@ -41,7 +41,7 @@ public class PersistenceInMemory : IPersistence
             existingDoctor.Name = doctor.Name;
             existingDoctor.LicenseNumber = doctor.LicenseNumber;
             existingDoctor.IsActive = doctor.IsActive;
-            existingDoctor.speciality = doctor.speciality;
+            existingDoctor.Speciality = doctor.Speciality;
             return await Task.FromResult(true);
         }
         return await Task.FromResult(false);
@@ -71,20 +71,34 @@ public class PersistenceInMemory : IPersistence
 
     public async Task<Speciality?> GetSpecialityByIdAsync(Guid id)
     {
-        return await Task.FromResult(_specialities.FirstOrDefault(s => s.Id == id));
+        return await Task.FromResult(_specialities.SingleOrDefault(s => s.Id == id));
     }
 
     private void LoadSpecialities()
     {
-        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "specialities.json");
-        if (File.Exists(fileName))
-        {
-            var jsonString = File.ReadAllText(fileName);
-            var specialitiesFromJson = JsonSerializer.Deserialize<List<Speciality>>(jsonString);
-            if (specialitiesFromJson != null)
+          try
+          { 
+         
+            string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Sources","specialities.json");
+            if (File.Exists(fileName))
             {
-                _specialities.AddRange(specialitiesFromJson);
+                var jsonString = File.ReadAllText(fileName);
+                //ignora mayúsculas/ minúsculas del JSON
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var specialitiesFromJson = JsonSerializer.Deserialize<List<Speciality>>(jsonString, options);
+                if (specialitiesFromJson != null)
+                {
+                    _specialities.AddRange(specialitiesFromJson);
+                }
             }
+          }
+          catch (Exception)
+          {
+              Console.WriteLine("Error loading specialities from JSON file.");
         }
-    }
+    }       
 }

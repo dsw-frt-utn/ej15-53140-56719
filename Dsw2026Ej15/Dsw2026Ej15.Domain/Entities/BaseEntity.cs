@@ -1,7 +1,6 @@
-﻿namespace Dsw2026Ej15.Domain.Entities
+﻿namespace Dsw2026Ej15.Domain.Entities;
+
+public abstract class BaseEntity
 {
-    public abstract class BaseEntity
-    {
-        public Guid Id { get;  set; }
-    }
+    public Guid Id { get; set; }
 }
