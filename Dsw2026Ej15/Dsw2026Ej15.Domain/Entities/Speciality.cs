@@ -9,14 +9,9 @@ public class Speciality : BaseEntity
     public string? Name { get; set; }
     public string? Description { get; set; }
 
-    public Speciality(string name, string description) :base()
+    public Speciality(string name, string description, Guid id) :base(id)
     {
         Name = name;
         Description = description;
-    }
-    public Speciality()
-    {
-        Name = String.Empty;
-        Description = String.Empty;
     }
 }

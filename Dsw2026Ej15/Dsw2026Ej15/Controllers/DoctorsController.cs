@@ -30,14 +30,7 @@ public class DoctorsController : ControllerBase
        if (speciality == null)
             throw new ValidationException("Speciality not found.");
 
-       var createdDoctor = new Doctor
-       {
-           Id = Guid.NewGuid(),
-           Name = doctor.Name.Trim(),
-           LicenseNumber = doctor.LicenseNumber.Trim(),
-           IsActive = true,
-           SpecialityId = doctor.SpecialityId
-        };
+        var createdDoctor = new Doctor(doctor.Name, doctor.LicenseNumber, speciality);
 
         await _persistence.AddDoctorAsync(createdDoctor);
 
@@ -65,4 +58,19 @@ public class DoctorsController : ControllerBase
         }
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<DoctorModel.Response>> GetDoctorById(Guid id)
+    {
+        var doctor = await _persistence.GetDoctorByIdAsync(id);
+
+        if(doctor == null)
+        {
+            return NotFound();
+        }
+
+        var doctorDto = new DoctorModel.Response(
+            Name: doctor.Name, LicenseNumber: doctor.LicenseNumber, Speciality: doctor.Speciality?.Name);
+
+        return Ok(doctorDto);
+    }
 }

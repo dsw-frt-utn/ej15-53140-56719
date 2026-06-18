@@ -4,5 +4,5 @@ using System.Text;
 
 namespace Dsw2026Ej15.Data.DTOs;
 
-public record SpecialityDto(Guid id, string Name, string Description);
+public record SpecialityDto(Guid Id, string Name, string Description);
 

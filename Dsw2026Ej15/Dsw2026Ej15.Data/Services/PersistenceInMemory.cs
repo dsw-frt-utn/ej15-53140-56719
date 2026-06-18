@@ -1,4 +1,5 @@
-﻿using Dsw2026Ej15.Domain.Entities;
+﻿using Dsw2026Ej15.Data.DTOs;
+using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ namespace Dsw2026Ej15.Data.Services;
 
 public class PersistenceInMemory : IPersistence
 {
-    private readonly List<Speciality> _specialities = [];
-    private readonly List<Doctor> _doctors = [];
+    private List<Speciality> _specialities = [];
+    private List<Doctor> _doctors = [];
 
     public PersistenceInMemory()
     {
@@ -25,7 +26,7 @@ public class PersistenceInMemory : IPersistence
     }
     public async Task<Doctor?> GetDoctorByIdAsync(Guid id)
     {
-        return await Task.FromResult(_doctors.FirstOrDefault(d => d.Id == id && d.IsActive));
+        return await Task.FromResult(_doctors.SingleOrDefault(d => d.Id == id && d.IsActive));
     }
 
     public async Task<IEnumerable<Doctor>> GetActiveDoctorsAsync()
@@ -33,34 +34,9 @@ public class PersistenceInMemory : IPersistence
        var activeDoctors = _doctors.Where(d => d.IsActive).ToList();
         foreach (var doctor in activeDoctors)
         {
-            doctor.Speciality = _specialities.FirstOrDefault(s => s.Id == doctor.SpecialityId);
+            doctor.Speciality = _specialities.FirstOrDefault(s => s.Id == doctor.Speciality?.Id);
         }
         return await Task.FromResult(activeDoctors);
-    }
-
-    public async Task<bool> UpdateDoctorAsync(Doctor doctor)
-    {
-        var existingDoctor = _doctors.FirstOrDefault(d => d.Id == doctor.Id && d.IsActive);
-        if (existingDoctor != null)
-        {
-            existingDoctor.Name = doctor.Name;
-            existingDoctor.LicenseNumber = doctor.LicenseNumber;
-            existingDoctor.IsActive = doctor.IsActive;
-            existingDoctor.Speciality = doctor.Speciality;
-            return await Task.FromResult(true);
-        }
-        return await Task.FromResult(false);
-    }
-
-    public async Task<bool> DeleteDoctorAsync(Guid id)
-    {
-        var doctor = _doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
-        if (doctor != null)
-        {
-            doctor.IsActive = false;
-            return await Task.FromResult(true);
-        }
-        return await Task.FromResult(false);
     }
 
     //specialities
@@ -85,25 +61,15 @@ public class PersistenceInMemory : IPersistence
           { 
          
             string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Sources","specialities.json");
-            if (File.Exists(fileName))
-            {
-                var jsonString = File.ReadAllText(fileName);
-                //ignora mayúsculas/ minúsculas del JSON
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
+            var json = File.ReadAllText(fileName);
+            var specialityDtos = JsonSerializer.Deserialize<List<SpecialityDto>>(json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
 
-                var specialitiesFromJson = JsonSerializer.Deserialize<List<Speciality>>(jsonString, options);
-                if (specialitiesFromJson != null)
-                {
-                    _specialities.AddRange(specialitiesFromJson);
-                }
-            }
+            _specialities = specialityDtos.Select(s => new Speciality(s.Name, s.Description, s.Id)).ToList();
           }
           catch (Exception)
           {
               Console.WriteLine("Error loading specialities from JSON file.");
-        }
+          }
     }       
 }

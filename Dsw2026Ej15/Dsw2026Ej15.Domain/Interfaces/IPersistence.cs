@@ -10,8 +10,6 @@ public interface IPersistence
     Task<IEnumerable<Doctor>> GetActiveDoctorsAsync();
     Task<Doctor?> GetDoctorByIdAsync(Guid id);
     Task AddDoctorAsync(Doctor doctor);
-    Task<bool> UpdateDoctorAsync(Doctor doctor); 
-    Task<bool> DeleteDoctorAsync(Guid id);
 
     Task<IEnumerable<Speciality>> GetAllSpecialitiesAsync();
     Task<Speciality?> GetSpecialityByIdAsync(Guid id);
