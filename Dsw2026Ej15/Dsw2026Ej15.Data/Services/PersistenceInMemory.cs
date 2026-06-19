@@ -39,6 +39,16 @@ public class PersistenceInMemory : IPersistence
         return await Task.FromResult(activeDoctors);
     }
 
+    public async Task DeactivateDoctorAsync(Guid id)
+    {
+        var doctor = _doctors.SingleOrDefault(d => d.Id == id);
+        if (doctor != null)
+        {
+            doctor.IsActive = false;
+        }
+        await Task.CompletedTask;
+    }
+
     //specialities
     public async Task<IEnumerable<Speciality>> GetAllSpecialitiesAsync()
     {

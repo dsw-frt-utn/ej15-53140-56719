@@ -73,4 +73,18 @@ public class DoctorsController : ControllerBase
 
         return Ok(doctorDto);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteDoctor(Guid id)
+    {
+        var doctor = await _persistence.GetDoctorByIdAsync(id);
+
+        if (doctor == null)
+        {
+            return NotFound();
+        }
+
+        await _persistence.DeactivateDoctorAsync(id);
+        return NoContent();
+    }
 }
