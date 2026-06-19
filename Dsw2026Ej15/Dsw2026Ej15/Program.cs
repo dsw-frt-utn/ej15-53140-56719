@@ -1,6 +1,8 @@
 
 using Dsw2026Ej15.Data.Services;
 using Dsw2026Ej15.Domain.Interfaces;
+using Dsw2026Ej15.Api.Middlewares;
+using Dsw2026Ej15.Domain.Exceptions;
 
 namespace Dsw2026Ej15
 {
@@ -18,6 +20,11 @@ namespace Dsw2026Ej15
             builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
 
             var app = builder.Build();
+            app.UseMiddleware<ExceptionMiddlewares>();
+            app.MapGet("/test-exception", () =>
+            {
+                throw new ValidationException("¡Middleware debería capturarme!");
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -29,8 +36,9 @@ namespace Dsw2026Ej15
             app.UseAuthorization();
             app.MapControllers();
 
-
             app.Run();
+
+
         }
     }
 }

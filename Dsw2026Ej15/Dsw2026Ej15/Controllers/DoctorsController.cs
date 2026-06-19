@@ -42,20 +42,14 @@ public class DoctorsController : ControllerBase
     {
         var doctorsActives = await _persistence.GetActiveDoctorsAsync();
 
-        try
-        {
-            var doctorsDtos = doctorsActives.Select(d => new DoctorModel.Response(
-                Name: d.Name,
-                LicenseNumber: d.LicenseNumber,
-                Speciality: d.Speciality?.Name
-                )).ToList();
+        var doctorsDtos = doctorsActives.Select(d => new DoctorModel.Response(
+        Name: d.Name,
+        LicenseNumber: d.LicenseNumber,
+        Speciality: d.Speciality?.Name
+        )).ToList();
 
-            return Ok(doctorsDtos);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "Error interno del servidor");
-        }
+        return Ok(doctorsDtos);
+        
     }
 
     [HttpGet("{id}")]
@@ -65,7 +59,7 @@ public class DoctorsController : ControllerBase
 
         if(doctor == null)
         {
-            return NotFound();
+            throw new ValidationException("Doctor not found or inactive.");
         }
 
         var doctorDto = new DoctorModel.Response(
@@ -81,10 +75,16 @@ public class DoctorsController : ControllerBase
 
         if (doctor == null)
         {
-            return NotFound();
+            throw new ValidationException("Doctor not found or inactive.");
         }
 
         await _persistence.DeactivateDoctorAsync(id);
         return NoContent();
+    }
+
+    [HttpGet("test-middleware")]
+    public IActionResult TestMiddleware()
+    {
+        throw new ValidationException("Test middleware works!");
     }
 }
