@@ -15,16 +15,13 @@ namespace Dsw2026Ej15
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            builder.Services.AddHealthChecks();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
 
             var app = builder.Build();
             app.UseMiddleware<ExceptionMiddlewares>();
-            app.MapGet("/test-exception", () =>
-            {
-                throw new ValidationException("¡Middleware debería capturarme!");
-            });
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -35,6 +32,7 @@ namespace Dsw2026Ej15
 
             app.UseAuthorization();
             app.MapControllers();
+            app.MapHealthChecks("/health-check");
 
             app.Run();
 
