@@ -82,9 +82,4 @@ public class DoctorsController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("test-middleware")]
-    public IActionResult TestMiddleware()
-    {
-        throw new ValidationException("Test middleware works!");
-    }
 }
