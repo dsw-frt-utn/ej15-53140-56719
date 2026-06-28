@@ -3,5 +3,5 @@
 public record DoctorModel
 {
     public record Request(string Name, string LicenseNumber, Guid SpecialityId);
-    public record Response(string? Name, string? LicenseNumber, string? Speciality);
+    public record Response(string Name, string LicenseNumber, string? Speciality, Guid? Id = null);
 }
