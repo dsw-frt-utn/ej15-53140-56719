@@ -9,6 +9,8 @@ public class Speciality : BaseEntity
     public string? Name { get; set; }
     public string? Description { get; set; }
 
+    private Speciality() { }
+    
     public Speciality(string name, string description, Guid id) :base(id)
     {
         Name = name;

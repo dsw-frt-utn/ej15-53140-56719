@@ -31,29 +31,16 @@ public class PersistenceInMemory : IPersistence
 
     public async Task<IEnumerable<Doctor>> GetActiveDoctorsAsync()
     {
-       var activeDoctors = _doctors.Where(d => d.IsActive).ToList();
-        foreach (var doctor in activeDoctors)
-        {
-            doctor.Speciality = _specialities.FirstOrDefault(s => s.Id == doctor.Speciality?.Id);
-        }
-        return await Task.FromResult(activeDoctors);
+        return await Task.FromResult(_doctors.Where(d => d.IsActive));
     }
 
-    public async Task DeactivateDoctorAsync(Guid id)
+    public async Task UpdateDoctorAsync(Doctor doctor)
     {
-        var doctor = _doctors.SingleOrDefault(d => d.Id == id);
-        if (doctor != null)
-        {
-            doctor.IsActive = false;
-        }
-        await Task.CompletedTask;
+        _doctors.Remove(doctor);
+        _doctors.Add(doctor);
     }
 
     //specialities
-    public async Task<IEnumerable<Speciality>> GetAllSpecialitiesAsync()
-    {
-        return await Task.FromResult((IEnumerable<Speciality>)_specialities.AsReadOnly());
-    }
     public async Task AddSpecialityAsync(Speciality speciality)
     {
         _specialities.Add(speciality);
@@ -81,5 +68,6 @@ public class PersistenceInMemory : IPersistence
           {
               Console.WriteLine("Error loading specialities from JSON file.");
           }
-    }       
+    }
+
 }
