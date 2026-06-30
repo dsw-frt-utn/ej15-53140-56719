@@ -21,12 +21,17 @@ public class PersistenceEF : IPersistence
     }
     public async Task<IEnumerable<Doctor>> GetActiveDoctorsAsync()
     {
-        return _context.Doctors.Where(d => d.IsActive);
+        return await _context.Doctors
+            .Where(d => d.IsActive)
+            .Include(d => d.Speciality)
+            .ToListAsync();
     }
 
     public async Task<Doctor?> GetDoctorByIdAsync(Guid id)
     {
-        return await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
+        return await _context.Doctors
+            .Include(d => d.Speciality)
+            .FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
     }
     public async Task AddSpecialityAsync(Speciality speciality)
     {
